@@ -1,12 +1,21 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"os"
+	"strconv"
 	"strings"
 )
 
 func main() {
-	chessBoard, err := generateChessBoard(8, 8)
+	height, width, err := promptChessboardParameters()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	chessBoard, err := generateChessBoard(height, width)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -15,11 +24,12 @@ func main() {
 	fmt.Println(chessboardToString(chessBoard))
 }
 
-type ChessCell string
+type ChessCell rune
 
 const (
-	white ChessCell = "  "
-	black ChessCell = "#"
+	white   ChessCell = ' '
+	black   ChessCell = '#'
+	invalid ChessCell = '?'
 )
 
 func (c ChessCell) String() string {
@@ -33,11 +43,11 @@ func getChessCellValue(value int) (ChessCell, error) {
 	case 1:
 		return black, nil
 	default:
-		return "", fmt.Errorf("invalid chess cell value: %d", value)
+		return invalid, fmt.Errorf("invalid chess cell value: %d", value)
 	}
 }
 
-func generateChessBoard(width int, height int) ([][]ChessCell, error) {
+func generateChessBoard(height int, width int) ([][]ChessCell, error) {
 	chessBoard := make([][]ChessCell, height)
 	for i := range chessBoard {
 		chessBoard[i] = make([]ChessCell, width)
@@ -64,5 +74,37 @@ func chessboardToString(board [][]ChessCell) string {
 		}
 		acc.WriteString("\n")
 	}
-	return fmt.Sprint(acc.String())
+	return acc.String()
+}
+
+func promptChessboardParameters() (height int, width int, err error) {
+	reader := bufio.NewReader(os.Stdin)
+
+	fmt.Print("Enter chess board height: ")
+	inputHeight, err := reader.ReadString('\n')
+	if err != nil {
+		err = fmt.Errorf("invalid chess board height value: %s", inputHeight)
+		return
+	}
+
+	height, err = strconv.Atoi(strings.TrimSpace(inputHeight))
+	if err != nil {
+		err = fmt.Errorf("invalid chess board height value: %s", inputHeight)
+		return
+	}
+
+	fmt.Print("Enter chess board width: ")
+	inputWidth, err := reader.ReadString('\n')
+	if err != nil {
+		err = fmt.Errorf("invalid chess board width value: %s", inputWidth)
+		return
+	}
+
+	width, err = strconv.Atoi(strings.TrimSpace(inputWidth))
+	if err != nil {
+		err = fmt.Errorf("invalid chess board width value: %s", inputWidth)
+		return
+	}
+
+	return
 }
