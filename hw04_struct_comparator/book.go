@@ -13,27 +13,27 @@ func NewBook(id int64, title string, author string, year int32, size int32, rate
 	return Book{id, title, author, year, size, rate}
 }
 
-func (b *Book) GetID() int64 {
+func (b *Book) ID() int64 {
 	return b.id
 }
 
-func (b *Book) GetTitle() string {
+func (b *Book) Title() string {
 	return b.title
 }
 
-func (b *Book) GetAuthor() string {
+func (b *Book) Author() string {
 	return b.author
 }
 
-func (b *Book) GetYear() int32 {
+func (b *Book) Year() int32 {
 	return b.year
 }
 
-func (b *Book) GetSize() int32 {
+func (b *Book) Size() int32 {
 	return b.size
 }
 
-func (b *Book) GetRate() float32 {
+func (b *Book) Rate() float32 {
 	return b.rate
 }
 

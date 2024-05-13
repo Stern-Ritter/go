@@ -19,12 +19,12 @@ func NewBookComparator(compareType BookCompareType) *BookComparator {
 func (c BookComparator) Compare(a, b Book) bool {
 	switch c.compareType {
 	case CompareBookByYear:
-		return a.GetYear() >= b.GetYear()
+		return a.Year() >= b.Year()
 	case CompareBookBySize:
-		return a.GetSize() >= b.GetSize()
+		return a.Size() >= b.Size()
 	case CompareBookByRate:
-		return a.GetRate() >= b.GetRate()
+		return a.Rate() >= b.Rate()
 	default:
-		return a.GetID() >= b.GetID()
+		return a.ID() >= b.ID()
 	}
 }
