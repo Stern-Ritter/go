@@ -13,8 +13,8 @@ type Circle struct {
 	radius float64
 }
 
-func NewCircle(radius float64) Circle {
-	return Circle{radius: radius}
+func NewCircle(radius float64) *Circle {
+	return &Circle{radius: radius}
 }
 
 func (c Circle) Area() float64 {
@@ -30,8 +30,8 @@ type Rectangle struct {
 	height float64
 }
 
-func NewRectangle(width float64, height float64) Rectangle {
-	return Rectangle{width: width, height: height}
+func NewRectangle(width float64, height float64) *Rectangle {
+	return &Rectangle{width: width, height: height}
 }
 
 func (r Rectangle) Area() float64 {
@@ -47,8 +47,8 @@ type Triangle struct {
 	height float64
 }
 
-func NewTriangle(base float64, height float64) Triangle {
-	return Triangle{base: base, height: height}
+func NewTriangle(base float64, height float64) *Triangle {
+	return &Triangle{base: base, height: height}
 }
 
 func (t Triangle) Area() float64 {
