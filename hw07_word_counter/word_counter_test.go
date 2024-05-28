@@ -33,7 +33,7 @@ func TestCountWords(t *testing.T) {
 			want:  map[string]int{"hello": 1, "world": 1, "welcome": 1},
 		},
 		{
-			name:  "should return correct map of words when input contains multiple words with spaces at the beginning and end of input",
+			name:  "should return correct map of words when input contains spaces at the beginning and end of input",
 			input: "	hello world welcome			  ",
 			want:  map[string]int{"hello": 1, "world": 1, "welcome": 1},
 		},
