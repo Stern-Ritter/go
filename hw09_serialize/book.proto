@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package proto;
+option go_package = "./proto";
+
+message Book {
+  uint64 id = 1;
+  string title = 2;
+  string author = 3;
+  uint32 year = 4;
+  uint32 size = 5;
+  float rate = 6;
+}
+
+message BookList {
+  repeated Book books = 1;
+}
