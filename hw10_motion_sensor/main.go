@@ -1,25 +1,29 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"time"
 )
 
 func main() {
-	sensorDataCh := make(chan int)
-	processedDataCh := make(chan float64)
-	doneCh := make(chan struct{})
+	sensorDataCh := NewDataChannel[int](10)
+	processedDataCh := NewDataChannel[float64](10)
 	random := NewRandom()
 
-	start := time.Now()
-	go SensorDataCollecting(sensorDataCh, doneCh, 300, random)
-	go SensorDataProcessing(processedDataCh, sensorDataCh, 10)
-	go func() {
-		time.Sleep(1 * time.Minute)
-		close(doneCh)
-	}()
+	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Minute)
+	defer cancel()
 
-	for processedData := range processedDataCh {
+	start := time.Now()
+
+	go SensorDataCollecting(ctx, sensorDataCh, 300, random)
+	go SensorDataProcessing(processedDataCh, sensorDataCh, 10)
+
+	for {
+		processedData, ok := processedDataCh.Get()
+		if !ok {
+			break
+		}
 		fmt.Printf("Got processed data: %g\n", processedData)
 	}
 
