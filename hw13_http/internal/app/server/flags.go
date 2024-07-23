@@ -2,7 +2,8 @@ package server
 
 import (
 	"github.com/Stern-Ritter/go/hw13_http/internal/config/server"
-	"github.com/spf13/pflag"
+
+	"flag"
 )
 
 func GetConfig() *server.Config {
@@ -15,7 +16,7 @@ func GetConfig() *server.Config {
 }
 
 func parseFlags(c *server.Config) {
-	pflag.StringVarP(&c.Host, "host", "h", "localhost", "server host")
-	pflag.IntVarP(&c.Port, "port", "p", 8080, "server port")
-	pflag.Parse()
+	flag.StringVar(&c.Host, "h", "localhost", "server host")
+	flag.IntVar(&c.Port, "p", 8080, "server port")
+	flag.Parse()
 }

@@ -1,8 +1,9 @@
 package agent
 
 import (
+	"flag"
+
 	"github.com/Stern-Ritter/go/hw13_http/internal/config/agent"
-	"github.com/spf13/pflag"
 )
 
 func GetConfig() *agent.Config {
@@ -15,7 +16,7 @@ func GetConfig() *agent.Config {
 }
 
 func parseFlags(cfg *agent.Config) {
-	pflag.StringVarP(&cfg.ServerURL, "url", "u", "http://localhost:8080", "server url to send requests")
-	pflag.StringVarP(&cfg.ResourceEndpoint, "endpoint", "e", "users", "resource endpoint")
-	pflag.Parse()
+	flag.StringVar(&cfg.ServerURL, "u", "http://localhost:8080", "server url to send requests")
+	flag.StringVar(&cfg.ResourceEndpoint, "e", "users", "resource endpoint")
+	flag.Parse()
 }
