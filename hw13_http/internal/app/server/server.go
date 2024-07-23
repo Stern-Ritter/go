@@ -6,11 +6,10 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/gorilla/mux"
-
 	"github.com/Stern-Ritter/go/hw13_http/internal/config/server"
 	service "github.com/Stern-Ritter/go/hw13_http/internal/service/server"
 	storage "github.com/Stern-Ritter/go/hw13_http/internal/storage/server"
+	"github.com/go-chi/chi/v5"
 )
 
 func Run(cfg *server.Config, log *slog.Logger) error {
@@ -18,7 +17,7 @@ func Run(cfg *server.Config, log *slog.Logger) error {
 	userService := service.NewUserService(userStorage)
 	srv := service.NewServer(userService, cfg, log)
 
-	r := mux.NewRouter()
+	r := chi.NewRouter()
 	addRoutes(r, srv)
 
 	url := fmt.Sprintf("%s:%d", cfg.Host, cfg.Port)
@@ -38,8 +37,8 @@ func Run(cfg *server.Config, log *slog.Logger) error {
 	return nil
 }
 
-func addRoutes(router *mux.Router, srv *service.Server) {
+func addRoutes(router chi.Router, srv *service.Server) {
 	router.Use(srv.LoggerMiddleware)
-	router.HandleFunc("/users", srv.CreateUserHandler).Methods(http.MethodPost)
-	router.HandleFunc("/users/{id}", srv.GetUserHandler).Methods(http.MethodGet)
+	router.Post("/users", srv.CreateUserHandler)
+	router.Get("/users/{id}", srv.GetUserHandler)
 }

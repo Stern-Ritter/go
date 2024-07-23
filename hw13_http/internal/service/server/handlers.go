@@ -9,7 +9,7 @@ import (
 
 	er "github.com/Stern-Ritter/go/hw13_http/internal/errors"
 	"github.com/Stern-Ritter/go/hw13_http/internal/model"
-	"github.com/gorilla/mux"
+	"github.com/go-chi/chi/v5"
 )
 
 func (s *Server) CreateUserHandler(w http.ResponseWriter, r *http.Request) {
@@ -49,9 +49,7 @@ func (s *Server) CreateUserHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) GetUserHandler(w http.ResponseWriter, r *http.Request) {
-	pathVars := mux.Vars(r)
-
-	pathID := pathVars["id"]
+	pathID := chi.URLParam(r, "id")
 	id, err := strconv.ParseUint(pathID, 10, 64)
 	if err != nil {
 		http.Error(w, "Invalid user id", http.StatusBadRequest)
