@@ -2,7 +2,6 @@ package server
 
 import (
 	"fmt"
-	"log/slog"
 	"net/http"
 	"time"
 
@@ -10,9 +9,10 @@ import (
 	service "github.com/Stern-Ritter/go/hw13_http/internal/service/server"
 	storage "github.com/Stern-Ritter/go/hw13_http/internal/storage/server"
 	"github.com/go-chi/chi/v5"
+	"github.com/sirupsen/logrus"
 )
 
-func Run(cfg *server.Config, log *slog.Logger) error {
+func Run(cfg *server.Config, log *logrus.Logger) error {
 	userStorage := storage.NewUserStorage()
 	userService := service.NewUserService(userStorage)
 	srv := service.NewServer(userService, cfg, log)
@@ -30,7 +30,7 @@ func Run(cfg *server.Config, log *slog.Logger) error {
 		IdleTimeout:  60 * time.Second,
 	}
 
-	log.Info("Server running", "url", url)
+	log.WithFields(logrus.Fields{"url": url}).Info("Server running")
 	if err := server.ListenAndServe(); err != nil {
 		return fmt.Errorf("failed to start server: %w", err)
 	}

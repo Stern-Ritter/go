@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/Stern-Ritter/go/hw13_http/internal/app/server"
 	"github.com/Stern-Ritter/go/hw13_http/internal/logger"
+	"github.com/sirupsen/logrus"
 )
 
 func main() {
@@ -11,6 +12,7 @@ func main() {
 
 	err := server.Run(cfg, lg)
 	if err != nil {
-		lg.Error("Error starting server", "error", err)
+		lg.WithFields(logrus.Fields{"error": err}).
+			Error("Error starting server")
 	}
 }

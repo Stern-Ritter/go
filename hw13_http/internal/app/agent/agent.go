@@ -3,16 +3,16 @@ package agent
 import (
 	"encoding/json"
 	"io"
-	"log/slog"
 	"net/http"
 	"strings"
 
 	"github.com/Stern-Ritter/go/hw13_http/internal/config/agent"
 	"github.com/Stern-Ritter/go/hw13_http/internal/model"
 	service "github.com/Stern-Ritter/go/hw13_http/internal/service/agent"
+	"github.com/sirupsen/logrus"
 )
 
-func Run(cfg *agent.Config, lg *slog.Logger) error {
+func Run(cfg *agent.Config, lg *logrus.Logger) error {
 	c := &http.Client{}
 	a := service.NewAgent(c, cfg, lg)
 
@@ -38,65 +38,76 @@ func Run(cfg *agent.Config, lg *slog.Logger) error {
 func sendPostUserRequest(agent *service.Agent, url string, user model.User) {
 	payload, err := json.Marshal(user)
 	if err != nil {
-		agent.Logger.Error("Error marshalling request body", "url", url, "payload", string(payload), "error", err)
+		agent.Logger.WithFields(logrus.Fields{"url": url, "payload": string(payload), "error": err}).
+			Error("Error marshalling request body")
 		return
 	}
 
 	resp, err := agent.SendRequest(url, http.MethodPost, map[string]string{"Content-Type": "application/json"}, payload)
 	if err != nil {
-		agent.Logger.Error("Error sending request to agent", "url", url, "payload", string(payload), "error", err)
+		agent.Logger.WithFields(logrus.Fields{"url": url, "payload": string(payload), "error": err}).
+			Error("Error sending request to agent")
 		return
 	}
 	defer resp.Body.Close()
 
 	data, err := io.ReadAll(resp.Body)
 	if err != nil {
-		agent.Logger.Error("Error reading response body", "url", url, "payload", string(payload), "error", err)
+		agent.Logger.WithFields(logrus.Fields{"url": url, "payload": string(payload), "error": err}).
+			Error("Error reading response body")
 		return
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		agent.Logger.Info("Successfully sent request to server", "url", url, "payload", string(payload), "statusCode",
-			resp.StatusCode)
+		agent.Logger.WithFields(logrus.Fields{"url": url, "payload": string(payload), "statusCode": resp.StatusCode}).
+			Info("Successfully sent request to server", "url")
 		return
 	}
 
 	savedUser := model.User{}
 	err = json.Unmarshal(data, &savedUser)
 	if err != nil {
-		agent.Logger.Error("Error unmarshalling response body", "url", url, "payload", string(payload), "error", err)
+		agent.Logger.WithFields(logrus.Fields{"url": url, "payload": string(payload), "error": err}).
+			Error("Error unmarshalling response body")
 		return
 	}
 
-	agent.Logger.Info("Successfully sent request to server", "url", url, "payload", user, "statusCode",
-		resp.StatusCode, "responseBody", savedUser)
+	agent.Logger.WithFields(logrus.Fields{
+		"url": url, "payload": user, "statusCode": resp.StatusCode,
+		"responseBody": savedUser,
+	}).
+		Info("Successfully sent request to server")
 }
 
 func sendGetUserRequest(agent *service.Agent, url string) {
 	resp, err := agent.SendRequest(url, http.MethodGet, make(map[string]string), make([]byte, 0))
 	if err != nil {
-		agent.Logger.Error("Error sending request to agent", "url", url, "error", err)
+		agent.Logger.WithFields(logrus.Fields{"url": url, "error": err}).
+			Error("Error sending request to agent")
 	}
 	defer resp.Body.Close()
 
 	data, err := io.ReadAll(resp.Body)
 	if err != nil {
-		agent.Logger.Error("Error reading response body", "url", url, "error", err)
+		agent.Logger.WithFields(logrus.Fields{"url": url, "error": err}).
+			Error("Error reading response body")
 		return
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		agent.Logger.Info("Successfully sent request to server", "url", url, "statusCode", resp.StatusCode)
+		agent.Logger.WithFields(logrus.Fields{"url": url, "statusCode": resp.StatusCode}).
+			Info("Successfully sent request to server")
 		return
 	}
 
 	savedUser := model.User{}
 	err = json.Unmarshal(data, &savedUser)
 	if err != nil {
-		agent.Logger.Error("Error unmarshalling response body", "url", url, "error", err)
+		agent.Logger.WithFields(logrus.Fields{"url": url, "error": err}).
+			Error("Error unmarshalling response body", "url")
 		return
 	}
 
-	agent.Logger.Info("Successfully sent request to server", "url", url, "statusCode", resp.StatusCode,
-		"responseBody", savedUser)
+	agent.Logger.WithFields(logrus.Fields{"url": url, "statusCode": resp.StatusCode, "responseBody": savedUser}).
+		Info("Successfully sent request to server")
 }

@@ -1,33 +1,34 @@
 package logger
 
 import (
-	"log/slog"
 	"os"
 	"strings"
+
+	"github.com/sirupsen/logrus"
 )
 
-func GetLogger(level string) *slog.Logger {
+func GetLogger(level string) *logrus.Logger {
 	lvl := parseLevel(level)
-	opts := &slog.HandlerOptions{
-		Level: lvl,
-	}
-	handler := slog.NewJSONHandler(os.Stdout, opts)
-	logger := slog.New(handler)
+
+	logger := logrus.New()
+	logger.SetOutput(os.Stdout)
+	logger.SetLevel(lvl)
+	logger.SetFormatter(&logrus.JSONFormatter{})
 
 	return logger
 }
 
-func parseLevel(level string) slog.Level {
+func parseLevel(level string) logrus.Level {
 	switch strings.ToUpper(level) {
 	case "DEBUG":
-		return slog.LevelDebug
+		return logrus.DebugLevel
 	case "INFO":
-		return slog.LevelInfo
+		return logrus.InfoLevel
 	case "WARNING":
-		return slog.LevelWarn
+		return logrus.WarnLevel
 	case "ERROR":
-		return slog.LevelError
+		return logrus.ErrorLevel
 	default:
-		return slog.LevelInfo
+		return logrus.InfoLevel
 	}
 }

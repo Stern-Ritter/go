@@ -3,6 +3,8 @@ package server
 import (
 	"net/http"
 	"time"
+
+	"github.com/sirupsen/logrus"
 )
 
 func (s *Server) LoggerMiddleware(next http.Handler) http.Handler {
@@ -12,11 +14,13 @@ func (s *Server) LoggerMiddleware(next http.Handler) http.Handler {
 		rw := responseWriter{ResponseWriter: w}
 		next.ServeHTTP(&rw, r)
 
-		s.Logger.Info("Request done",
-			"method", r.Method,
-			"path", r.URL.Path,
-			"status", rw.status,
-			"duration", time.Since(start))
+		s.Logger.WithFields(logrus.Fields{
+			"method":   r.Method,
+			"path":     r.URL.Path,
+			"status":   rw.status,
+			"duration": time.Since(start),
+		}).
+			Info("Request done")
 	})
 }
 

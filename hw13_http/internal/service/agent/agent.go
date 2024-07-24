@@ -1,19 +1,19 @@
 package agent
 
 import (
-	"log/slog"
 	"net/http"
 
 	"github.com/Stern-Ritter/go/hw13_http/internal/config/agent"
+	"github.com/sirupsen/logrus"
 )
 
 type Agent struct {
 	client *http.Client
 	config *agent.Config
-	Logger *slog.Logger
+	Logger *logrus.Logger
 }
 
-func NewAgent(client *http.Client, cfg *agent.Config, lg *slog.Logger) *Agent {
+func NewAgent(client *http.Client, cfg *agent.Config, lg *logrus.Logger) *Agent {
 	return &Agent{
 		client: client,
 		config: cfg,
