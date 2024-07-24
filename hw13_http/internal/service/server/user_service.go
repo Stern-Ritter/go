@@ -1,7 +1,5 @@
 package server
 
-import "C"
-
 import (
 	"github.com/Stern-Ritter/go/hw13_http/internal/model"
 	storage "github.com/Stern-Ritter/go/hw13_http/internal/storage/server"

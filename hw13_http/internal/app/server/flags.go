@@ -1,9 +1,9 @@
 package server
 
 import (
-	"github.com/Stern-Ritter/go/hw13_http/internal/config/server"
-
 	"flag"
+
+	"github.com/Stern-Ritter/go/hw13_http/internal/config/server"
 )
 
 func GetConfig() *server.Config {
