@@ -3,10 +3,9 @@ package main
 import (
 	"log"
 
-	"github.com/sirupsen/logrus"
-
 	"github.com/Stern-Ritter/go/hw16_docker/internal/app"
 	"github.com/Stern-Ritter/go/hw16_docker/internal/logger"
+	"github.com/sirupsen/logrus"
 )
 
 func main() {

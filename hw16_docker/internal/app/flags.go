@@ -3,9 +3,8 @@ package app
 import (
 	"flag"
 
-	"github.com/caarlos0/env"
-
 	"github.com/Stern-Ritter/go/hw16_docker/internal/config"
+	"github.com/caarlos0/env"
 )
 
 func GetConfig() (*config.Config, error) {
